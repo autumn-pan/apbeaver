@@ -25,6 +25,20 @@ uint8_t* init_tape(size_t size)
   return tape;
 }
 
+void write(uint8_t* tape, size_t index)
+{
+  if(index >= sizeof(tape)*8)
+  {
+    fprintf(stderr, "Error: Index out of bounds!\n");
+    return;
+  }
+
+  size_t integer_index = floor(index/8);
+  size_t subindex = index % 8;
+
+  tape[integer_index] |= (1 << (7 - subindex));
+}
+
 // Parse a halt instruction "---"
 bool parse_halt(char *str)
 {
