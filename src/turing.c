@@ -25,7 +25,7 @@ uint8_t* init_tape(size_t size)
   return tape;
 }
 
-void write(uint8_t* tape, size_t index)
+void write(uint8_t* tape, size_t index, bool value)
 {
   if(index >= sizeof(tape)*8)
   {
@@ -36,7 +36,24 @@ void write(uint8_t* tape, size_t index)
   size_t integer_index = floor(index/8);
   size_t subindex = index % 8;
 
-  tape[integer_index] |= (1 << (7 - subindex));
+  if(value)
+    tape[integer_index] |= (1 << (7 - subindex));
+  else
+    tape[integer_index] &= (1 << (7 - subindex));
+}
+
+bool read(uint8_t* tape, size_t index)
+{
+  if(index >= sizeof(tape)*8)
+  {
+    fprintf(stderr, "Error: Index out of bounds!\n");
+    return;
+  }
+
+  size_t integer_index = floor(index/8);
+  size_t subindex = index % 8;
+
+  return (bool)((tape[integer_index] >> (7 - subindex)) & 1U);
 }
 
 // Parse a halt instruction "---"
