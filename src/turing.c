@@ -2,9 +2,28 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <math.h>
+
+const uint8_t NUM_STATES = 6;
+// This system handles 6 state TMs, so any symbol after 'F' (70) represents a halt
+const uint8_t HLT_SYMBOLS = 71; 
+const uint8_t NUM_SYMBOLS = 2;
+const uint16_t TAPE_LENGTH = UINT16_MAX;
+const uint16_t START_POS = (UINT16_MAX >> 1);
 
 // Tests will be conducted on BB6 holdout
 // 1RB1LD_1RC0LD_1LD1RE_0LA1LD_0RB0RF_---0RC
+
+uint8_t* init_tape(size_t size)
+{
+  uint8_t* tape = malloc(sizeof(uint8_t) * ceil(size / 8));
+  if(!tape)
+    return NULL;
+
+  memset(tape, 0, size);
+  return tape;
+}
 
 // Parse a halt instruction "---"
 bool parse_halt(char *str)
@@ -24,16 +43,17 @@ Instruction_t parse_instruction(char *str) {
     return instruction;
   }
 
+  // Parse what value is written to the tape
   instruction.halting = false;
   if (!isdigit(str[0]))
   {
     instruction.error = true;
     return instruction;
   }
-
   instruction.write = str[0] - '0';
   str++;
 
+  // Parse which direction the head moves
   if (str[0] == 'R')
     instruction.move = true;
   else if (str[0] == 'L')
@@ -43,15 +63,12 @@ Instruction_t parse_instruction(char *str) {
     instruction.error = true;
     return instruction;
   }
-
   str++;
+
+  // Parse the next state that the machine transistions to
   instruction.new_state = str[0] - 'A';
-  if(instruction.new_state >= HLT_SYMBOLS)
-    instruction.halting = true;
-  
   str++;
   instruction.error = false;
-
   return instruction;
 }
 
@@ -61,7 +78,7 @@ TuringMachine_t *init_turing(char *str) {
     return NULL;
 
   // Initialize the tape
-  mpz_init_set_ui(tm->tape, 0);
+  tm->tape = init_tape(TAPE_LENGTH);
   tm->head = START_POS;
 
   for (int i = 0; i < NUM_STATES; i++) {
