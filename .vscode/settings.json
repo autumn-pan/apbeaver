@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "stdbool.h": "c",
-        "gmp.h": "c",
-        "stdio.h": "c",
-        "stdint.h": "c"
-    }
-}
