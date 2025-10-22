@@ -1,0 +1,2 @@
+# APBEAVER
+This is just a repository for me to save my work on the Busy Beaver Function. I'm currently working on a Turing Machine simulator specialized for 6-state 2-symbol turing machines. In fact, the focus of my study is BB(6).
