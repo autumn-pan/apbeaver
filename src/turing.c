@@ -21,7 +21,7 @@ uint8_t* init_tape(size_t size)
   if(!tape)
     return NULL;
 
-  memset(tape, 0, size);
+  memset(tape, 0, size/8);
   return tape;
 }
 
@@ -47,7 +47,7 @@ bool read(uint8_t* tape, size_t index)
   if(index >= sizeof(tape)*8)
   {
     fprintf(stderr, "Error: Index out of bounds!\n");
-    return;
+    return false;
   }
 
   size_t integer_index = floor(index/8);
