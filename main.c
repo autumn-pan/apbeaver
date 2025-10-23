@@ -3,5 +3,5 @@
 
 int main()
 {
-    test_bitset();
+    test_parser();
 }

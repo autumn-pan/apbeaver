@@ -5,5 +5,6 @@
 #include <stdio.h>
 
 void test_bitset();
+void test_parser();
 
 #endif

@@ -52,7 +52,6 @@ bool read(uint8_t* tape, size_t index)
 
   size_t integer_index = floor(index/8);
   size_t subindex = index % 8;
-
   return (bool)((tape[integer_index] >> (7 - subindex)) & 1U);
 }
 
@@ -64,6 +63,14 @@ bool parse_halt(char *str)
 
   str += 3;
   return true;
+}
+
+void dump_instruction(Instruction_t i)
+{
+  if(i.error || i.halting)
+    return;
+
+  printf("Value: %i%i%c\n", i.write, i.move, i.new_state);
 }
 
 Instruction_t parse_instruction(char *str) {
@@ -97,8 +104,9 @@ Instruction_t parse_instruction(char *str) {
   str++;
 
   // Parse the next state that the machine transistions to
-  instruction.new_state = str[0] - 'A';
-  str++;
+  instruction.new_state = str[0];
+    str++;
+
   instruction.error = false;
   return instruction;
 }
@@ -112,18 +120,20 @@ TuringMachine_t *init_turing(char *str) {
   tm->tape = init_tape(TAPE_LENGTH);
   tm->head = START_POS;
 
+  char* mirror = str;
   for (int i = 0; i < NUM_STATES; i++) {
-    for (int j = 2; j < NUM_SYMBOLS; j++) {
-      Instruction_t tmp = parse_instruction(str);
+    for (int j = 0; j < NUM_SYMBOLS; j++) {
+      Instruction_t tmp = parse_instruction(mirror);
       if(tmp.error)
         return NULL;
 
+      mirror += 3;
       tm->instructions[i][j] = tmp;
     }
 
     // Account for the underscore separating states
     if(i < NUM_STATES - 1)
-      str++;
+      mirror++;
   }
 
   return tm;

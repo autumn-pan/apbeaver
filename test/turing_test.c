@@ -5,11 +5,18 @@
 void test_bitset()
 {
     uint8_t* tape = init_tape(TAPE_LENGTH);
-    bool value1 = read(tape, 2);
+    bool value1 = read(tape, 9);
     printf("Value: %i\n", value1);
-    write(tape, 2, 1);
-    bool value2 = read(tape, 2);
+    write(tape, 9, 1);
+    bool value2 = read(tape, 9);
     printf("Value: %i\n", value2);
 
     free(tape);
+}
+
+
+void test_parser()
+{
+    TuringMachine_t *tm = init_turing("1RB1LD_1RC0LD_1LD1RE_0LA1LD_0RB0RF_---0RC");
+    printf("Val: %c\n", tm->instructions[0][0].move);
 }
