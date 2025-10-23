@@ -9,7 +9,18 @@ void unaccelerated_sim(TuringMachine_t *tm) {
     return;
   }
 
+  uint8_t prev_log = 0;
+  uint64_t i = 0;
+
   while (1) {
+    i++;
+
+    if(i % 100000000 == 0)
+    {
+      prev_log++;
+      printf("Hundred Million Steps: %i\n", prev_log);
+      i = 0;
+    }      
     uint8_t value = (uint8_t)read(tm->tape, tm->head);
     Instruction_t instruction = tm->instructions[tm->state - 'A'][value];
 

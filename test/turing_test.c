@@ -23,6 +23,5 @@ void test_parser() {
 void test_sim() {
   TuringMachine_t *tm =
       init_turing("1RB1LD_1RC0LD_1LD1RE_0LA1LD_0RB0RF_---0RC");
-
   unaccelerated_sim(tm);
 }

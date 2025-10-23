@@ -7,7 +7,7 @@
 
 const uint8_t NUM_STATES = 6;
 // This system handles 6 state TMs, so any symbol after 'F' (70) represents a
-// halt
+// 
 const uint8_t HLT_SYMBOLS = 71;
 const uint8_t NUM_SYMBOLS = 2;
 const uint16_t TAPE_LENGTH = UINT16_MAX;
@@ -17,16 +17,17 @@ const uint16_t START_POS = (UINT16_MAX >> 1);
 // 1RB1LD_1RC0LD_1LD1RE_0LA1LD_0RB0RF_---0RC
 
 uint8_t *init_tape(size_t size) {
-  uint8_t *tape = malloc(sizeof(uint8_t) * ceil(size / 8));
+  uint8_t *tape = calloc((size / 8), sizeof(uint8_t));
+
   if (!tape)
     return NULL;
 
   memset(tape, 0, size / 8);
-  return tape;
+  return tape;                                                       
 }
 
 void write(uint8_t *tape, size_t index, bool value) {
-  if (index >= sizeof(tape) * 8) {
+  if (index >= TAPE_LENGTH - 1) {
     fprintf(stderr, "Error: Index out of bounds!\n");
     return;
   }
@@ -41,13 +42,19 @@ void write(uint8_t *tape, size_t index, bool value) {
 }
 
 bool read(uint8_t *tape, size_t index) {
-  if (index >= sizeof(tape) * 8) {
+  if (index >= TAPE_LENGTH - 1) {
     fprintf(stderr, "Error: Index out of bounds!\n");
     return false;
   }
+  if(!tape)
+  {
+    fprintf(stderr, "Error: Null passed to read!\n");
+    return false;
+  }
 
-  size_t integer_index = floor(index / 8);
+  size_t integer_index = (index / 8);
   size_t subindex = index % 8;
+
   return (bool)((tape[integer_index] >> (7 - subindex)) & 1U);
 }
 
@@ -107,8 +114,7 @@ TuringMachine_t *init_turing(char *str) {
   if (!tm)
     return NULL;
 
-  // Initialize the tape
-  tm->tape = init_tape(TAPE_LENGTH);
+  // Initialize the turing machine
   tm->head = START_POS;
   tm->state = 'A';
 
