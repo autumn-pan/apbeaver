@@ -6,5 +6,5 @@
 
 void test_bitset();
 void test_parser();
-
+void test_sim();
 #endif
