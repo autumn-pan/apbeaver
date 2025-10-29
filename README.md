@@ -3,3 +3,6 @@ This is just a repository for me to save my work on the Busy Beaver Function. I'
 
 # Roadmap
 Unaccelerated simulation has been added, but has not been tested on known halting machines. It also has not been expanded to comprehend certain syntax variants, which will be added in the near future. This is also unable to simulate a lot of more complex machines due to computational constraints. In one test, this system reached 36 billion steps in about 10 minutes on a BB6 holdout. The next goal is to create an accelerated simulator.
+
+# Story
+I was introduced to the Busy Beaver Function a few years ago by a friend. It was only this week that I learned that I could join the effort to research BB(6). When I first joined, I was encouraged to work on a TM simulator. I can run through billions of steps of turing machines with this code, but that is not enough in practice for many BB6 problems. 
