@@ -13,4 +13,12 @@ This is important because it can decide if certain kinds of turing machines can 
 
 One challenge was building a robust parser, one that would be versatile and fail gracefully as opposed to some of my earlier projects. I added error checks and tried to follow best practice. I learned a lot about c standard practice, though this code isn't exactly safety-critical.
 
+# Instructions
+## Installation
+```git clone https://github.com/autumn-pan/apbeaver```
+## Execution
+```./bb <turing_machine>```
+Example:
+```./bb 1RB1RD_0LB0LE_1LR1LC_1LA0LB_1LF1RE_---0RA```
+
 [![Athena Award Badge](https://img.shields.io/endpoint?url=https%3A%2F%2Faward.athena.hackclub.com%2Fapi%2Fbadge)](https://award.athena.hackclub.com?utm_source=readme)
