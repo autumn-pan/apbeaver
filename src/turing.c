@@ -16,16 +16,6 @@ const uint16_t START_POS = (UINT16_MAX >> 1);
 // Tests will be conducted on BB6 holdout
 // 1RB1LD_1RC0LD_1LD1RE_0LA1LD_0RB0RF_---0RC
 
-uint8_t *init_tape(size_t size) {
-  uint8_t *tape = calloc((size / 8), sizeof(uint8_t));
-
-  if (!tape)
-    return NULL;
-
-  memset(tape, 0, size / 8);
-  return tape;                                                       
-}
-
 void write(uint8_t *tape, size_t index, bool value) {
   if (index >= TAPE_LENGTH - 1) {
     fprintf(stderr, "Error: Index out of bounds!\n");
@@ -122,6 +112,7 @@ TuringMachine_t *init_turing(char *str) {
   for (int i = 0; i < NUM_STATES; i++) {
     for (int j = 0; j < NUM_SYMBOLS; j++) {
       Instruction_t tmp = parse_instruction(mirror);
+      printf("Instruction: %i\n", tmp.move);
       if (tmp.error)
         return NULL;
 
@@ -134,5 +125,7 @@ TuringMachine_t *init_turing(char *str) {
       mirror++;
   }
 
+  // Zero initialize the tape
+  memset(tm->tape, 0, TAPE_LENGTH/8);
   return tm;
 }

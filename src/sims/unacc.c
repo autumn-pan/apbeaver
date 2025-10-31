@@ -3,22 +3,38 @@
 #include <stdint.h>
 #include <stdio.h>
 
-void unaccelerated_sim(TuringMachine_t *tm) {
+#define MAX_STEPS 1000000
+
+void unaccelerated_sim(TuringMachine_t *tm, enum MODE_TYPE mode) {
   if (!tm) {
     fprintf(stderr, "Error: Null passed to unaccelerated_sim!\n");
     return;
   }
+
   uint64_t overflow = 0;
   uint32_t i = 0;
+  uint16_t leftmost_cell = (UINT16_MAX/2);
+  uint16_t rightmost_cell = (UINT16_MAX/2);
 
-  while (1) {
-    i++;
-    if(i % UINT32_MAX == 0)
+  for(int s = 0; s < MAX_STEPS; s++) {
+    // SIM tracks the number of steps
+    if(mode == SIM) {
+      i++;
+      if(i % UINT32_MAX == 0)
+      {
+        overflow++;
+        printf("Overflow: %i\n", overflow);
+        i = 0;
+      }      
+    }
+    else if(mode == CELLS) // count how many cells visited
     {
-      overflow++;
-      printf("Overflow: %i\n", overflow);
-      i = 0;
-    }      
+      if (leftmost_cell > tm->head)
+        leftmost_cell = tm->head;
+      else if (rightmost_cell < tm->head)
+        rightmost_cell = tm->head;
+    }
+
     uint8_t value = (uint8_t)read(tm->tape, tm->head);
     Instruction_t instruction = tm->instructions[tm->state - 'A'][value];
 
@@ -36,7 +52,12 @@ void unaccelerated_sim(TuringMachine_t *tm) {
 
     // Execute the code on the instruction
     write(tm->tape, tm->head, (bool)instruction.write);
-    tm->head += (uint8_t)instruction.move;
+    if(instruction.move) 
+      tm->head++;
+    else
+      tm->head--;
     tm->state = instruction.new_state;
   }
+
+  printf("Range: %i\n", rightmost_cell - leftmost_cell);
 }

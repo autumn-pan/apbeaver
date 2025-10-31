@@ -14,7 +14,9 @@ extern const uint8_t NUM_SYMBOLS;
 extern const uint16_t TAPE_LENGTH;
 extern const uint16_t START_POS;
 
+enum MODE_TYPE { SIM, RANGE, CELLS, UNSET };
 enum SIM_RESULT { HALTED, OVERFLOWED, TAPE_EXCEEDED };
+
 typedef struct {
   bool error;    // Whether or not the instruction was successfully parsed
   bool halting;  // Whether or not it is the halt state
