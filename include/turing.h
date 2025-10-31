@@ -26,7 +26,7 @@ typedef struct {
 } Instruction_t;
 
 typedef struct {
-  Instruction_t instructions[2][6];
+  Instruction_t instructions[6][2];
   uint8_t tape[UINT16_MAX];
   uint32_t head;
   uint8_t state;

@@ -18,7 +18,8 @@ void unaccelerated_sim(TuringMachine_t *tm, enum MODE_TYPE mode) {
   uint16_t rightmost_cell = (UINT16_MAX/2);
 
   for(int s = 0; s < MAX_STEPS; s++) {
-if(mode == CELLS) // count how many cells visited
+    i++;
+    if(mode == CELLS) // count how many cells visited
     {
       if (leftmost_cell > tm->head)
         leftmost_cell = tm->head;
@@ -26,19 +27,18 @@ if(mode == CELLS) // count how many cells visited
         rightmost_cell = tm->head;
     }
 
-    i++;
-    printf("Index: %i\n", i);
-
+    // Find the next instruction
     uint8_t value = (uint8_t)read(tm->tape, tm->head);
     Instruction_t instruction = tm->instructions[tm->state - 'A'][value];
 
+    // Check for any halting conditions
     if (instruction.halting) {
       printf("Turing Machine Halted!\n");
       printf("Index: %i\n", i);
       return;
     }
     if (tm->head >= TAPE_LENGTH - 1 || tm->head <= 0) {
-      printf("Turing Machine Out Of Bounds! (Insufficient Tape Size)\n");
+      printf("Turing Machine Out Of Bounds at step %i\n", i);
       printf("Head Position: %i\n", tm->head);
       return;
     }
@@ -51,5 +51,6 @@ if(mode == CELLS) // count how many cells visited
       tm->head--;
     tm->state = instruction.new_state;
   }
+
   printf("Range: %i\n", rightmost_cell - leftmost_cell);
 }
