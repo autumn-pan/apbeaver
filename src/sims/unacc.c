@@ -5,29 +5,20 @@
 
 #define MAX_STEPS 1000000
 
+// Overflow tracking is not necessary for now because it's not meant to track more than 2^64 steps
+// Adding it is trivial
 void unaccelerated_sim(TuringMachine_t *tm, enum MODE_TYPE mode) {
   if (!tm) {
     fprintf(stderr, "Error: Null passed to unaccelerated_sim!\n");
     return;
   }
 
-  uint64_t overflow = 0;
   uint32_t i = 0;
   uint16_t leftmost_cell = (UINT16_MAX/2);
   uint16_t rightmost_cell = (UINT16_MAX/2);
 
   for(int s = 0; s < MAX_STEPS; s++) {
-    // SIM tracks the number of steps
-    if(mode == SIM) {
-      i++;
-      if(i % UINT32_MAX == 0)
-      {
-        overflow++;
-        printf("Overflow: %i\n", overflow);
-        i = 0;
-      }      
-    }
-    else if(mode == CELLS) // count how many cells visited
+if(mode == CELLS) // count how many cells visited
     {
       if (leftmost_cell > tm->head)
         leftmost_cell = tm->head;
@@ -35,12 +26,14 @@ void unaccelerated_sim(TuringMachine_t *tm, enum MODE_TYPE mode) {
         rightmost_cell = tm->head;
     }
 
+    i++;
+    printf("Index: %i\n", i);
+
     uint8_t value = (uint8_t)read(tm->tape, tm->head);
     Instruction_t instruction = tm->instructions[tm->state - 'A'][value];
 
     if (instruction.halting) {
       printf("Turing Machine Halted!\n");
-      printf("Overflow: %i\n", overflow);
       printf("Index: %i\n", i);
       return;
     }
@@ -58,6 +51,5 @@ void unaccelerated_sim(TuringMachine_t *tm, enum MODE_TYPE mode) {
       tm->head--;
     tm->state = instruction.new_state;
   }
-
   printf("Range: %i\n", rightmost_cell - leftmost_cell);
 }

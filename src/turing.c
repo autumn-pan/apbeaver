@@ -6,8 +6,7 @@
 #include <string.h>
 
 const uint8_t NUM_STATES = 6;
-// This system handles 6 state TMs, so any symbol after 'F' (70) represents a
-// 
+// This system handles 6 state TMs, so any symbol after 'F' (70) represents a halt
 const uint8_t HLT_SYMBOLS = 71;
 const uint8_t NUM_SYMBOLS = 2;
 const uint16_t TAPE_LENGTH = UINT16_MAX;
@@ -58,8 +57,13 @@ bool parse_halt(char *str) {
 }
 
 void dump_instruction(Instruction_t i) {
-  if (i.error || i.halting)
+  if (i.error)
     return;
+  else if (i.halting)
+  {
+    printf("Value: ---\n");
+    return;
+  }
 
   printf("Value: %i%i%c\n", i.write, i.move, i.new_state);
 }
@@ -112,12 +116,14 @@ TuringMachine_t *init_turing(char *str) {
   for (int i = 0; i < NUM_STATES; i++) {
     for (int j = 0; j < NUM_SYMBOLS; j++) {
       Instruction_t tmp = parse_instruction(mirror);
-      printf("Instruction: %i\n", tmp.move);
       if (tmp.error)
         return NULL;
 
       mirror += 3;
       tm->instructions[i][j] = tmp;
+
+      printf("Index: %i, %i ... ", i, j);
+      dump_instruction(tmp);
     }
 
     // Account for the underscore separating states
