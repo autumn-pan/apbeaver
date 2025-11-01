@@ -27,19 +27,21 @@ void unaccelerated_sim(TuringMachine_t *tm, enum MODE_TYPE mode) {
         rightmost_cell = tm->head;
     }
 
-    // Find the next instruction
-    uint8_t value = (uint8_t)read(tm->tape, tm->head);
-    Instruction_t instruction = tm->instructions[tm->state - 'A'][value];
 
     // Check for any halting conditions
-    if (instruction.halting) {
-      printf("Turing Machine Halted!\n");
-      printf("Index: %i\n", i);
-      return;
-    }
     if (tm->head >= TAPE_LENGTH - 1 || tm->head <= 0) {
       printf("Turing Machine Out Of Bounds at step %i\n", i);
       printf("Head Position: %i\n", tm->head);
+      return;
+    }
+
+    // Find the next instruction
+    uint8_t value = (uint8_t)read(tm->tape, tm->head);
+    Instruction_t instruction = tm->instructions[tm->state - 'A'][value];
+    
+    if (instruction.halting) {
+      printf("Turing Machine Halted!\n");
+      printf("Index: %i\n", i);
       return;
     }
 

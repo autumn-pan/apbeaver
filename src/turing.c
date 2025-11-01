@@ -27,7 +27,7 @@ void write(uint8_t *tape, size_t index, bool value) {
   if (value)
     tape[integer_index] |= (1 << (7 - subindex));
   else
-    tape[integer_index] &= (1 << (7 - subindex));
+    tape[integer_index] &= ~(1 << (7 - subindex));
 }
 
 bool read(uint8_t *tape, size_t index) {
