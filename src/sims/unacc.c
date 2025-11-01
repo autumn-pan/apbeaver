@@ -8,8 +8,13 @@
 // Find the next instruction
 Instruction_t get_instruction(TuringMachine_t* tm)
 {
-  // Value is logically incapable of being out of bounds, so no check is needed
-  uint8_t value = read(tm->tape, tm->head);
+  int8_t value = read(tm->tape, tm->head);
+  if(value == -1)  
+  {
+    Instruction_t error;
+    error.error = true;
+    return error;
+  }
 
   // Ensure that the instruction indices are within bounds
   if(tm->state < 'A' || tm->state - 'A' >= NUM_STATES)
@@ -23,10 +28,10 @@ Instruction_t get_instruction(TuringMachine_t* tm)
 
 // Overflow tracking is not necessary for now because it's not meant to track more than 2^64 steps
 // Adding it is trivial
-void unaccelerated_sim(TuringMachine_t *tm, enum MODE_TYPE mode) {
+uint64_t unaccelerated_sim(TuringMachine_t *tm, enum MODE_TYPE mode) {
   if (!tm) {
     fprintf(stderr, "Error: Null passed to unaccelerated_sim!\n");
-    return;
+    return 0;
   }
 
   uint16_t leftmost_cell = (UINT16_MAX/2);
@@ -46,7 +51,7 @@ void unaccelerated_sim(TuringMachine_t *tm, enum MODE_TYPE mode) {
     if (tm->head >= TAPE_LENGTH || tm->head < 0) {
       printf("Turing Machine Out Of Bounds at step %i\n", s);
       printf("Head Position: %i\n", tm->head);
-      return;
+      return 0;
     }
 
     // Get instruction and check if it's halting
@@ -54,11 +59,15 @@ void unaccelerated_sim(TuringMachine_t *tm, enum MODE_TYPE mode) {
     if (instruction.halting) {
       printf("Turing Machine Halted!\n");
       printf("Index: %i\n", s);
-      return;
+      return 0;
     }
+    if(instruction.error)
+      return 0;
 
     // Execute the code on the instruction
-    write(tm->tape, tm->head, (bool)instruction.write);
+    if(!write(tm->tape, tm->head, (bool)instruction.write))
+      return 0;
+      
     tm->state = instruction.new_state;
     // Move the turing machine over by one step
     if(instruction.move == 1) 
@@ -67,5 +76,5 @@ void unaccelerated_sim(TuringMachine_t *tm, enum MODE_TYPE mode) {
       tm->head--;
   }
 
-  printf("Range: %i\n", rightmost_cell - leftmost_cell);
+  return rightmost_cell - leftmost_cell;
 }

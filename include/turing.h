@@ -34,7 +34,7 @@ typedef struct {
 
 TuringMachine_t *init_turing(char *str);
 uint8_t *init_tape(size_t size);
-void write(uint8_t *tape, size_t index, bool value);
-bool read(uint8_t *tape, size_t index);
+bool write(uint8_t *tape, size_t index, bool value);
+int8_t read(uint8_t *tape, size_t index);
 
 #endif

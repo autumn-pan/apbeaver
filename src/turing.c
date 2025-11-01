@@ -15,10 +15,10 @@ const uint16_t START_POS = (UINT16_MAX >> 1);
 // Tests will be conducted on BB6 holdout
 // 1RB1LD_1RC0LD_1LD1RE_0LA1LD_0RB0RF_---0RC
 
-void write(uint8_t *tape, size_t index, bool value) {
+bool write(uint8_t *tape, size_t index, bool value) {
   if (index >= TAPE_LENGTH - 1) {
     fprintf(stderr, "Error: Index out of bounds!\n");
-    return;
+    return false;
   }
 
   size_t integer_index = floor(index / 8);
@@ -28,23 +28,25 @@ void write(uint8_t *tape, size_t index, bool value) {
     tape[integer_index] |= (1 << (7 - subindex));
   else
     tape[integer_index] &= ~(1 << (7 - subindex));
+
+  return true;
 }
 
-bool read(uint8_t *tape, size_t index) {
+int8_t read(uint8_t *tape, size_t index) {
   if (index >= TAPE_LENGTH - 1) {
     fprintf(stderr, "Error: Index out of bounds!\n");
-    return false;
+    return -1;
   }
   if(!tape)
   {
     fprintf(stderr, "Error: Null passed to read!\n");
-    return false;
+    return -1;
   }
 
   size_t integer_index = (index / 8);
   size_t subindex = index % 8;
 
-  return (bool)((tape[integer_index] >> (7 - subindex)) & 1U);
+  return ((tape[integer_index] >> (7 - subindex)) & 1U);
 }
 
 // Parse a halt instruction "---"

@@ -4,6 +4,6 @@
 #include "turing.h"
 #include <stdint.h>
 
-void unaccelerated_sim(TuringMachine_t *tm, enum MODE_TYPE mode);
+uint64_t unaccelerated_sim(TuringMachine_t *tm, enum MODE_TYPE mode);
 
 #endif
