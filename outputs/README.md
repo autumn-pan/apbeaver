@@ -1,0 +1,1 @@
+`output.txt` is a file consisting of 1618 holdouts, and the number of cells they visit after `10^9` steps. 0 is an error number, which implies that the number of cells exceeded `UINT16_MAX/2` and overflowed.

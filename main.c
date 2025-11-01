@@ -14,7 +14,7 @@ const char* modes[] = {
 void compute_all_ranges(char* filename)
 {
     FILE* file = fopen(filename, "r");
-    FILE* output = fopen("output2.txt", "w");
+    FILE* output = fopen("output3.txt", "w");
 
     if(!file)
     {
