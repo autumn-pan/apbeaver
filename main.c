@@ -33,6 +33,8 @@ void compute_all_ranges(char* filename)
         fflush(stdout);
         fflush(output);
 
+        free(tm);
+
     }
 }
 
