@@ -42,9 +42,13 @@ uint64_t unaccelerated_sim(TuringMachine_t *tm, enum MODE_TYPE mode) {
     if(mode == CELLS) 
     {
       if (leftmost_cell > tm->head)
+      {
         leftmost_cell = tm->head;
+      }
       else if (rightmost_cell < tm->head)
+      {
         rightmost_cell = tm->head;
+      }
     }
 
     // Check for any halting conditions

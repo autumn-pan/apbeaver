@@ -34,7 +34,6 @@ void compute_all_ranges(char* filename)
         fflush(output);
 
         free(tm);
-
     }
 }
 
