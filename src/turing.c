@@ -70,6 +70,16 @@ void dump_instruction(Instruction_t i) {
   printf("Value: %i%i%c\n", i.write, i.move, i.new_state);
 }
 
+// Helper function to validate and extract a character from the string
+static bool validate_and_advance(char **str, char *out, size_t min_length) {
+  if (strlen(*str) < min_length) 
+    return false;
+
+  *out = **str;
+  (*str)++;
+  return true;
+}
+
 Instruction_t parse_instruction(char *str) {
   Instruction_t instruction;
   if (parse_halt(str)) {
@@ -78,35 +88,42 @@ Instruction_t parse_instruction(char *str) {
   }
 
   // Parse what value is written to the tape
-  instruction.halting = false;
-  if (!isdigit(str[0])) {
+  char write_char;
+  if (!validate_and_advance(&str, &write_char, 1) || !isdigit(write_char)) {
     instruction.error = true;
     return instruction;
   }
-  instruction.write = str[0] - '0';
-  str++;
+  instruction.write = write_char - '0';
 
   // Parse which direction the head moves
-  if (str[0] == 'R')
-    instruction.move = true;
-  else if (str[0] == 'L')
-    instruction.move = false;
-  else {
+  char move_char;
+  if (!validate_and_advance(&str, &move_char, 1)) {
     instruction.error = true;
     return instruction;
   }
-  str++;
+  if (move_char == 'R') {
+    instruction.move = true;
+  } else if (move_char == 'L') {
+    instruction.move = false;
+  } else {
+    instruction.error = true;
+    return instruction;
+  }
 
-  // Parse the next state that the machine transistions to
-  instruction.new_state = str[0];
-  str++;
+  // Parse the next state that the machine transitions to
+  char state_char;
+  if (!validate_and_advance(&str, &state_char, 1)) {
+    instruction.error = true;
+    return instruction;
+  }
+  instruction.new_state = state_char;
 
   instruction.error = false;
   return instruction;
 }
 
-TuringMachine_t *init_turing(char *str) {
-  TuringMachine_t *tm = malloc(sizeof(TuringMachine_t));
+NaiveTM_t *init_turing(char *str) {
+  NaiveTM_t *tm = malloc(sizeof(NaiveTM_t));
   if (!tm)
     return NULL;
 

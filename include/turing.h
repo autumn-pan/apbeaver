@@ -30,9 +30,9 @@ typedef struct {
   uint8_t tape[UINT16_MAX];
   uint32_t head;
   uint8_t state;
-} TuringMachine_t;
+} NaiveTM_t;
 
-TuringMachine_t *init_turing(char *str);
+NaiveTM_t *init_turing(char *str);
 uint8_t *init_tape(size_t size);
 bool write(uint8_t *tape, size_t index, bool value);
 int8_t read(uint8_t *tape, size_t index);

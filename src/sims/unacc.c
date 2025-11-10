@@ -6,7 +6,7 @@
 #define MAX_STEPS 1000000000
 
 // Find the next instruction
-Instruction_t get_instruction(TuringMachine_t* tm)
+Instruction_t get_instruction(NaiveTM_t* tm)
 {
   int8_t value = read(tm->tape, tm->head);
   if(value == -1)  
@@ -28,7 +28,7 @@ Instruction_t get_instruction(TuringMachine_t* tm)
 
 // Overflow tracking is not necessary for now because it's not meant to track more than 2^64 steps
 // Adding it is trivial
-uint64_t unaccelerated_sim(TuringMachine_t *tm, enum MODE_TYPE mode) {
+uint64_t unaccelerated_sim(NaiveTM_t *tm, enum MODE_TYPE mode) {
   if (!tm) {
     fprintf(stderr, "Error: Null passed to unaccelerated_sim!\n");
     return 0;

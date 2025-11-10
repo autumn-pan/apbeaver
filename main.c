@@ -24,7 +24,7 @@ void compute_all_ranges(char* filename)
 
     char buffer[128]; 
     while (fgets(buffer, sizeof(buffer), file) != NULL) {
-        TuringMachine_t* tm = init_turing(buffer);
+        NaiveTM_t* tm = init_turing(buffer);
         uint64_t range = unaccelerated_sim(tm, CELLS);
         printf("Range: %i\n", range);
         char cells[16];
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
 
-    TuringMachine_t* tm = init_turing(argv[2]);
+    NaiveTM_t* tm = init_turing(argv[2]);
     unaccelerated_sim(tm, mode);
 }
 
