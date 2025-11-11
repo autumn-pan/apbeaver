@@ -6,8 +6,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#define MAX_COMPRESSION_SIZE 16
+
 extern const uint8_t NUM_STATES;
-// This system handles 6 state TMs, so any symbol after 'F' (70) represents a
+// This system handlesw 6 state TMs, so any symbol after 'F' (70) represents a
 // halt
 extern const uint8_t HLT_SYMBOLS;
 extern const uint8_t NUM_SYMBOLS;
@@ -24,6 +26,23 @@ typedef struct {
   bool move;     // false represents left, true represents right
   uint8_t new_state;
 } Instruction_t;
+
+typedef struct compression {
+  bool pattern[MAX_COMPRESSION_SIZE];
+  bool is_infinite;
+  size_t pattern_size;
+  size_t repetitions;
+  struct compression* next_compression;
+} TapeCompression_t;
+
+typedef struct {
+  Instruction_t instructions[6][2];
+  size_t index;
+  size_t subindex;
+  uint8_t state;
+  TapeCompression_t* tape;
+  size_t num_compressions;
+} CompressedTM_t;
 
 typedef struct {
   Instruction_t instructions[6][2];
